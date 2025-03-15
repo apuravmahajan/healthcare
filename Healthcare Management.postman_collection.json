@@ -1,0 +1,748 @@
+{
+	"info": {
+		"_postman_id": "b5bfe98d-7e94-4f91-9f05-c4af8d3441e7",
+		"name": "Healthcare Management",
+		"description": "the collection variable host stores the hostname.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40891859"
+	},
+	"item": [
+		{
+			"name": "1. Authentication APIs",
+			"item": [
+				{
+					"name": "Register a new user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{uname}}\", \"email\":\"{{email}}\", \"password\":\"{{password}}\", \"password2\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/auth/register/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"const accessToken = responseJson.access-token;",
+									"pm.collectionVariables.set('access_token', accessToken);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{uname}}\", \"password\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/auth/login/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"const accessToken = responseJson.access;",
+									"",
+									"pm.collectionVariables.set('access_token', accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"refresh\": \"{{refresh_token}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/auth/login/refresh/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								"refresh",
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder has two requests:\n\n1. Register\n    \n2. Login\n    \n3. Refresh Token\n    \n\nRegister send a request along with following data: username, email, password, password2 and registers a user if not already exists. Update these details in collection variables.\n\nLogin returns an access token which is used for sending further requests.\n\nOnce, the access token expires, you can send refresh token request and get a new access token."
+		},
+		{
+			"name": "2. Patient Management APIs",
+			"item": [
+				{
+					"name": "Add a new patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "birth_date",
+									"value": "yyyy-mm-dd",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/patients/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve all patients",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/patients/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Details of a particular patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/patients/{{id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"patients",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Patient Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "birth_date",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/patients/{{id}}/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"patients",
+								"{{id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Patient Record",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/patients/{{id}}/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"patients",
+								"{{id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder has 5 requests set up.\n\nPOST adds a new patient in database. Hence, the data sent along the request needs to be updated. birth_date should be in yyyy-mm-dd format.\n\nGET retrieves all registered patients\n\nGET with an id variable returns the specified patient details. Update the id variable while sending request\n\nSimilarly, PUT changes data of a specified patient. Check only those values which need to be changed in the form-data body\n\nDELETE takes in id and if valid, deletes that patient record."
+		},
+		{
+			"name": "3. Doctor Management APIs",
+			"item": [
+				{
+					"name": "Add a new doctor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "specialization",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/doctors/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"doctors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve all doctors",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/doctors/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"doctors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Details of a particular doctor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/doctors/{{id}}/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"doctors",
+								"{{id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doctor Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "specialization",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/doctors/{{id}}/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"doctors",
+								"{{id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Doctor Record",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/doctors/{{id}}/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"doctors",
+								"{{id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder has 5 requests set up.\n\nPOST adds a new doctor in database. Hence, the data sent along the request needs to be updated\n\nGET retrieves all registered doctors\n\nGET with an id variable returns the specified doctor details. Update the id variable while sending request\n\nSimilarly, PUT changes data of a specified doctor. Check only those values which need to be changed in the form-data body\n\nDELETE takes in id and if valid, deletes that doctor record."
+		},
+		{
+			"name": "Patient-Doctor Management",
+			"item": [
+				{
+					"name": "Assign doctors to patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "patient",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "doctor",
+									"value": "[]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/mappings/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"mappings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All patient-doctor mappings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/mappings/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"mappings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all doctors assigned to a particular patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/mappings/{{patientid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"mappings",
+								"{{patientid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove a doctor from a patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/mappings/{{patientid}}/{{doctorid}}/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"mappings",
+								"{{patientid}}",
+								"{{doctorid}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This has four requests.\n\npatient id along with associated doctor ids is sent by POST and a new mapping or an existing mapping is updated.\n\nGET returns all patient-doctors mappings\n\nGET with patient id returns mappings of that particular patient\n\nDEL takes two ids in url, first patient id, second doctor id that is to be removed from the patient."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "uname",
+			"value": "deepak78",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "deepak78@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "deep8745",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
